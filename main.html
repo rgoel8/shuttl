@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		html {
+			height: 100%
+		}
+		
+		body {
+			height: 100%;
+			margin: 0;
+			padding: 0
+		}
+		
+		#map_canvas {
+			height: 100%
+		}
+
+	</style>
+
+<!--
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDWGGXY5L6knVvcSSrO5zNslJRExJh3zyY&sensor=false">
+	</script>
+-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=geometry"></script>
+	<script type="text/javascript">
+		var tempJson = [
+				{
+					"lat": 28.412839,
+					"lng": 77.041664
+				},
+				{
+					"lat": 28.421507,
+					"lng": 77.039018
+				},
+				{
+					"lat": 28.427017,
+					"lng": 77.037505
+				},
+				{
+					"lat": 28.429536,
+					"lng": 77.040552
+				},
+				{
+					"lat": 28.432287,
+					"lng": 77.04693
+				},
+				{
+					"lat": 28.437011,
+					"lng": 77.045957
+				},
+				{
+					"lat": 28.442948,
+					"lng": 77.038161
+				},
+				{
+					"lat": 28.44824,
+					"lng": 77.038023
+				},
+				{
+					"lat": 28.453622,
+					"lng": 77.043232
+				},
+				{
+					"lat": 28.463078,
+					"lng": 77.052115
+				},
+				{
+					"lat": 28.489606,
+					"lng": 77.080004
+				},
+				{
+					"lat": 28.498286,
+					"lng": 77.08841
+				},
+				{
+					"lat": 28.503162,
+					"lng": 77.088471
+				},
+				{
+					"lat": 28.506467,
+					"lng": 77.083922
+				},
+				{
+					"lat": 28.509734,
+					"lng": 77.07933
+				}
+			],
+			counter = 0;
+
+		function initialize() {
+
+
+			var myOptions = {
+				center: new google.maps.LatLng(28.4812, 77.0191), //lat long of gurgaon
+				zoom: 12,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+			var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+			var lat = tempJson[0].lat,
+			long = tempJson[0].lng,
+			marker = new google.maps.Marker({
+				position: new google.maps.LatLng(lat, long),
+				map: map
+			}),
+			prevPosn = marker.getPosition();
+
+			function moveCar(newCoords) {
+				var newLatLang = new google.maps.LatLng(newCoords);
+				map.panTo(newLatLang);
+				marker.setPosition(newLatLang);
+			}
+
+			var updateMap = window.setInterval(function() {
+				debugger
+				var dataLen = tempJson.length;
+				counter++;
+				if (counter < dataLen) {
+					moveCar(tempJson[counter]);
+					updateMarker(marker);
+				} else {
+					clearInterval(updateMap);
+				}
+			}, 300);
+
+			function updateMarker(marker) {
+				marker.setIcon({
+					path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+					strokeColor: 'red',
+					strokeWeight: 3,
+					scale: 6,
+					rotation: google.maps.geometry.spherical.computeHeading(prevPosn, marker.getPosition())
+				})
+			}
+		}
+
+	</script>
+</head>
+
+<body onload="initialize()">
+	<div id="map_canvas" style="width:60%; height:60%"></div>
+</body>
+
+</html>
